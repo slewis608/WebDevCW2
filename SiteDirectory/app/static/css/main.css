@@ -1,0 +1,31 @@
+html,body{
+    height: 100%;
+}
+
+.navbar-custom{
+    font-weight: bold;
+    background-color: #fd4866;
+    height: 11%;
+}
+
+.navbar-brand{
+    padding-right:4em;
+    font-size:2em;
+}
+
+.nav-item{
+    font-weight: bold;
+    font-size:1.85em;
+    margin-right:1.2em;
+}
+
+.dropdown-item{
+    padding-bottom:15px;
+}
+
+.dash-area{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-color: transparent;
+    color: #EDEADE;
+}
