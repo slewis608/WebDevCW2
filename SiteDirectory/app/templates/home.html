@@ -4,23 +4,102 @@
     <div class="row" style="height: 100%;">
         <div class="col-3 dash-area" style="background-color:#36454F;">
             <div class="row h-25">
-                <div class="col-12 border d-flex justify-content-center align-items-center">
-                    <h4> Welcome back, {{ user }}! </h4>
+                <div class="col-12 d-flex justify-content-center align-items-center" style="border-bottom: 3px solid #D3D3D3;">
+                    <h4> Welcome back, {{ userName }}! </h4>
                 </div>
             </div>
-            <div class="row h-50 border">
-                <div class="col-12">
-
+            <div class="row h-50">
+                <div class="col d-flex justify-content-center align-items-center text-center font-weight-bold" style="border-bottom: 3px solid #D3D3D3;">
+                    <span style="font-size:1.5em;">You have completed <br>
+                    <span style="font-size:3.5em;">{{ totalRuns }}</span> <br>
+                    runs in total! </span>
                 </div>
             </div>
             <div class="row h-25">
-                <div class="col-12">
-
+                <div class="col-6 text-center font-weight-bold">
+                    <span style="padding-top:2em;">Runs in the past 28 days:</span> <br>
+                    <span style="font-size:2.6em;">
+                    {{ runsThisMonth }}
+                    </span>
+                </div>
+                <div class="col-6 text-center font-weight-bold">
+                    Distance in the past 28 days: <br>
+                    <span style="font-size: 2.6em;">{{ distanceThisMonth }}km</span>
                 </div>
             </div>
         </div>
         <div class="col-9">
-            dsagfsd
+            <!-- Right hand side - contains posts & option to create new run --->
+            <div class="row add-new-run" style="height:10%;">
+                <div class="col-9 d-flex align-items-center">
+                    <span><h3>Posts</h3></span>
+                </div>
+                <div class="col-3 d-flex align-items-center justify-content-center">
+                <!-- Adding a new Post-->
+                <button type="button" class="btn btn-lg btn-secondary" data-toggle="modal" data-target="#newPostModal">Add New Run</button>
+                </div>
+            </div>
+            <div class="user-posts row" style="height:90%; overflow-y:scroll;">
+                <!-- Modal to open when user adds new post-->
+                <div class="modal fade" id="newPostModal" tabindex="-1" role="form" aria-labelledby = 'Posting Modal' aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="newPostModal">Add New Run</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action='' method="post" style="margin:1rem;">
+                                    {{ form.hidden_tag() }}
+                                    <div class="form-group w-75">
+                                        {{ form.runTitle.label }}
+                                        {{ form.runTitle(class_='form-control') }}
+                                    </div>
+                                    <div class="form-group w-75">
+                                        {{ form.runDistance.label }}
+                                        {{ form.runDistance(class_='form-control') }}
+                                    </div>
+                                    <div class="form-group date" style="width:45%;">
+                                        {{ form.runDate.label }}
+                                        {{ form.runDate(class_='form-control date', placeholder='e.g. 10/11/2023 14:00')}}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form.runDesc.label }}
+                                        {{ form.runDesc(class_='form-control') }}
+                                    </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                {{ form.submitRun(class='btn btn-primary') }}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <!-- User content goes here -->
+                    {% for post in allPostsOrdered %}
+                    <div class="row border" style="height:25%;">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="media border" style="border-radius:5px; background-color: #f9f9f9;">
+                                        <img class="mr-1" style="width:50px; height:50px;" src = {{ url_for('static', filename='images/profilePictureTest.webp') }} alt="Profile Picture">
+                                        <div class="media-body">
+                                            <b class="mt-0" style="font-size:1.5em;">{{ post['username'] }}</b> - <span class="font-weight-light">{{ post['date'] }}</span>
+                                            <p><b> {{ post['title'] }} - {{ post['distance'] }}km</b></p>
+                                            <p> {{ post['description'] }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

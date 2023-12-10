@@ -4,6 +4,15 @@ from flask_login import UserMixin
 roles_users = db.Table('roles_users', db.Column('user_id', db.ForeignKey('users.id')),
                         db.Column('role_id', db.Integer, db.ForeignKey('role.id')))
 
+followers = db.Table(
+    'followers',
+    db.metadata,
+    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'),
+              primary_key=True),
+    db.Column('followed_id', db.Integer, db.ForeignKey('users.id'),
+              primary_key=True)
+)
+
 
 class users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,6 +22,14 @@ class users(db.Model, UserMixin):
     password = db.Column(db.String(250))
     active = db.Column(db.Boolean)
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
+    following: db.WriteOnlyMapped['users'] = db.relationship(
+        secondary=followers, primaryjoin=(followers.c.follower_id == id),
+        secondaryjoin=(followers.c.followed_id == id),
+        back_populates='followers')
+    followers: db.WriteOnlyMapped['users'] = db.Relationship(
+        secondary=followers, primaryjoin = (followers.c.followed_id == id),
+        secondaryjoin=(followers.c.follower_id == id),
+        back_populates='following')
 
 
     def __repr__(self):
@@ -30,6 +47,7 @@ class runs(db.Model):
     runTitle = db.Column(db.String(500), index=True)
     runDistance = db.Column(db.Float)
     run_dateTime = db.Column(db.DateTime)
+    runDescription = db.Column(db.String(500))
 
     def __repr__(self):
         return '{}{}{}{}'.format(self.runId, self.runTitle, self.run_dateTime, self.runDistance)

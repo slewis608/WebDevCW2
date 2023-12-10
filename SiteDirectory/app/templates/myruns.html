@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid" style="height:89%;">
+    <div class="row" style="height:10%;">
+        <div class="col-12 text-center">
+            <h4> My Runs </h4>
+        </div>
+    </div>
+    <div class="row border" style="height:90%; overflow-y:scroll;">
+        <div class="col-12">
+            {% for post in userPosts %}
+            <div class="row" style="margin:10px;">
+                <div class="media border" style="border-radius:5px; background-color: #f9f9f9;">
+                        <img class="mr-3" style="width:50px; height:50px;" src = {{ url_for('static', filename='images/profilePictureTest.webp') }} alt="Profile Picture">
+                    <div class="media-body" style="margin:3px;">
+                        <b class="mt-0" style="font-size:1.5em;">{{ post['username'] }} </b> - <span class="font-weight-light"> {{ post['date']}} </span> <br>
+                        <b>{{ post['title'] }} - {{ post['distance'] }}km </b> <br>
+                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                        <button type="button" class="btn btn-outline-danger btn-sm float-right" style="padding-left:5px;">Delete Run</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
