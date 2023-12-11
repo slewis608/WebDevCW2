@@ -1,3 +1,4 @@
+from re import L
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, PasswordField, SubmitField, BooleanField, DecimalField, DateTimeLocalField, TextAreaField
 from wtforms.validators import DataRequired, InputRequired
@@ -22,4 +23,10 @@ class newRunForm(FlaskForm):
     runDesc = TextAreaField('Description', validators=[InputRequired()])
     submitRun = SubmitField('Post Run')
 
-    
+class followForm(FlaskForm):
+    followSubmit = SubmitField('Follow')
+    unfollowSubmit = SubmitField('Unfollow')
+
+class searchForm(FlaskForm):
+    searchField = StringField(validators=[DataRequired()], name='searched')
+    submit = SubmitField('Search')

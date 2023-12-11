@@ -1,8 +1,8 @@
-"""init migration
+"""new
 
-Revision ID: 344dc6adc5f4
+Revision ID: 50fe4ad2c594
 Revises: 
-Create Date: 2023-12-07 23:29:27.137443
+Create Date: 2023-12-11 02:01:13.902275
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '344dc6adc5f4'
+revision = '50fe4ad2c594'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -36,6 +36,13 @@ def upgrade():
         batch_op.create_index(batch_op.f('ix_users_email'), ['email'], unique=True)
         batch_op.create_index(batch_op.f('ix_users_username'), ['username'], unique=True)
 
+    op.create_table('followers',
+    sa.Column('follower_id', sa.Integer(), nullable=False),
+    sa.Column('followed_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['followed_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['follower_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('follower_id', 'followed_id')
+    )
     op.create_table('roles_users',
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('role_id', sa.Integer(), nullable=True),
@@ -48,6 +55,7 @@ def upgrade():
     sa.Column('runTitle', sa.String(length=500), nullable=True),
     sa.Column('runDistance', sa.Float(), nullable=True),
     sa.Column('run_dateTime', sa.DateTime(), nullable=True),
+    sa.Column('runDescription', sa.String(length=500), nullable=True),
     sa.ForeignKeyConstraint(['user_Id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('runId')
     )
@@ -64,6 +72,7 @@ def downgrade():
 
     op.drop_table('runs')
     op.drop_table('roles_users')
+    op.drop_table('followers')
     with op.batch_alter_table('users', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_users_username'))
         batch_op.drop_index(batch_op.f('ix_users_email'))

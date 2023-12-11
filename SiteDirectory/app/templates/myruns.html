@@ -2,12 +2,12 @@
 {% block content %}
 <div class="container-fluid" style="height:89%;">
     <div class="row" style="height:10%;">
-        <div class="col-12 text-center">
-            <h4> My Runs </h4>
+        <div class="d-flex col-12 justify-content-center align-items-center">
+            <h3> My Runs </h3>
         </div>
     </div>
     <div class="row border" style="height:90%; overflow-y:scroll;">
-        <div class="col-12">
+        <div class="col-12" id="userDash">
             {% for post in userPosts %}
             <div class="row" style="margin:10px;">
                 <div class="media border" style="border-radius:5px; background-color: #f9f9f9;">
@@ -16,11 +16,22 @@
                         <b class="mt-0" style="font-size:1.5em;">{{ post['username'] }} </b> - <span class="font-weight-light"> {{ post['date']}} </span> <br>
                         <b>{{ post['title'] }} - {{ post['distance'] }}km </b> <br>
                         <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                        <button type="button" class="btn btn-outline-danger btn-sm float-right" style="padding-left:5px;">Delete Run</button>
+                        <form action=" {{ url_for('delPost', post_id=post['id']) }}" method="post" class="delPost">
+                            <input type="submit" value="Delete Run" class="btn btn-outline-danger btn-sm float-right">
+                        </form>
                     </div>
                 </div>
             </div>
             {% endfor %}
+            {% if noPosts %}
+                <script>
+                    var disp = document.getElementById("userDash")
+                    disp.classList.add("d-flex")
+                    disp.classList.add("justify-content-center")
+                    disp.classList.add("align-items-center")
+                    disp.innerHTML = "<div class='text-center' style='font-size: 2em; font-weight:bold;'> You haven't posted any runs yet! <br> Get moving by posting a new run on the homepage. </div>"
+                </script>
+            {% endif %}
         </div>
     </div>
 </div>

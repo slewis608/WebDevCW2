@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid" style="height:89%;">
+    <!-- Profile header - Contains username, runs, follow/unfollow button etc. -->
+    <div class="row" style="height:10%; background-color:#ededed;">
+            <div class="col-4 d-flex align-items-end" style="font-size:2em; font-weight:bold;">{{ username }}</div>
+            <div class="col-4 d-flex align-items-end" style="font-size:1.2em; font-weight:bold;">Distance This Month: {{ userThisMonth['distRuns'] }}km</div>
+            <div class="col-2 d-flex align-items-end" style="font-size:1.2em; font-weight:bold;"> Runs This Month: {{ userThisMonth['numRuns'] }} </div>
+            <div class="col-2 d-flex align-items-end justify-content-end">
+                <!-- Follow Button Area -->
+                {% if followButtonOn %} 
+                    <a class="followBtn" id="{{ userId }}"> <button type="button" class="btn btn-lg btn-primary" id="follow">Follow</button></a>
+                    <a class="followBtn" id="{{ userId }}"> <button type="button" class="d-none btn btn-lg btn-warning" id="unfollow">Unfollow</button></a>
+                {% else %}
+                    <a class="followBtn" id="{{ userId }}"> <button type="button" class="d-none btn btn-lg btn-primary" id="follow">Follow</button></a>
+                    <a class="followBtn" id="{{ userId }}"> <button type="button" class="btn btn-lg btn-warning" id="unfollow">Unfollow</button></a>
+                {% endif %}
+            </div>
+    </div>
+    <!-- User's posts -->
+    <div class="row" style="height:90%;">
+        <div class="col-12" id="thisUserDash">
+            {% for post in userPosts %}
+            <div class="row" style="margin:10px;">
+                <div class="media border" style="border-radius:5px; background-color: #f9f9f9;">
+                        <img class="mr-3" style="width:50px; height:50px;" src = {{ url_for('static', filename='images/profilePictureTest.webp') }} alt="Profile Picture">
+                    <div class="media-body" style="margin:3px;">
+                        <b class="mt-0" style="font-size:1.5em;">{{ post['username'] }} </b> - <span class="font-weight-light"> {{ post['date']}} </span> <br>
+                        <b>{{ post['title'] }} - {{ post['distance'] }}km </b> <br>
+                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% if userHasPosted == False %}
+            <script>
+                var disp = document.getElementById("thisUserDash")
+                disp.classList.add("d-flex")
+                disp.classList.add("justify-content-center")
+                disp.classList.add("align-items-center")
+                disp.innerHTML = "<div class='text-center' style='font-size: 2em; font-weight:bold;'>  User is yet to post any runs! </div>"
+            </script>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

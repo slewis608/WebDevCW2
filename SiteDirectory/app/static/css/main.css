@@ -29,3 +29,12 @@ html,body{
     border-color: transparent;
     color: #EDEADE;
 }
+
+.userSearchObj{
+    margin-left:2px;
+    margin-right:2px;
+}
+
+.userSearchObj:hover{
+    background-color:#D3D3D3;
+}

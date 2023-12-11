@@ -1,6 +1,39 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container-fluid" style="height:89%;">
-    
+   <div class="row border" style="height:15%;">
+        <div class="col-12 d-flex align-items-center justify-content-center" style="background-color:#ededed;">
+            <form method="POST" action='' style="width:90%;">
+                {{ form.hidden_tag() }}
+                <div class="input-group">
+                    {{ form.searchField(class_="form-control", placeholder_="Search for another user..")}}
+                    <div class="input-group-append" >
+                        {{ form.submit(class_="input-group-text") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+   </div>
+   <div class="row" style="height:85%; overflow-y:scroll; margin-top:10px;">
+        <!-- Search results appear here -->
+        <div class="col-12">
+            {% for userObj in searchDict %}
+            <div class="row userSearchObj">
+                <div class="col-12">
+                    <a href="{{ url_for('otherProfile', user_name=userObj['username']) }}" style="color:black;">
+                        <div class="media">
+                            <img class="mr-3 mt-1" src="{{ url_for('static', filename='images/profilePictureTest.webp') }}" alt="Profile Picture" style="height:50px; width:50px;">
+                            <div class="media-body">
+                                <b class="mt-0">{{ userObj['username'] }}</b>
+                                <p class="mt-2">Total Runs - <b>{{ userObj['totalRuns'] }}</b>    Last Run - <b>{{ userObj['dateLastRun'] }}</b></p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <hr style="border-top: 3px solid #bbb; border-radius:5px; margin:2px;">
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}
