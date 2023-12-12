@@ -1,6 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container-fluid" style="height:89%;">
+    <div class="row">
+        <div class="col-12">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                            <span aria-hidden=true>&times;</span>
+                        </button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
     <div class="row" style="height: 100%;">
         <div class="col-3 dash-area" style="background-color:#36454F;">
             <div class="row h-25">
@@ -16,15 +32,15 @@
                 </div>
             </div>
             <div class="row h-25">
-                <div class="col-6 text-center font-weight-bold">
-                    <span style="padding-top:2em;">Runs in the past 28 days:</span> <br>
+                <div class="col-6 d-flex justify-content-center align-items-center text-center font-weight-bold">
+                    <span style="margin-bottom:0.6em; line-height:4em;">Runs in the past 28 days: <br>
                     <span style="font-size:2.6em;">
                     {{ runsThisMonth }}
-                    </span>
+                    </span></span>
                 </div>
-                <div class="col-6 text-center font-weight-bold">
-                    Distance in the past 28 days: <br>
-                    <span style="font-size: 2.6em;">{{ distanceThisMonth }}km</span>
+                <div class="col-6 d-flex justify-content-center align-items-center text-center font-weight-bold">
+                    <span>Distance in the past 28 days: <br>
+                    <span style="font-size: 2.6em;">{{ distanceThisMonth }}km</span></span>
                 </div>
             </div>
         </div>
@@ -32,7 +48,7 @@
             <!-- Right hand side - contains posts & option to create new run --->
             <div class="row add-new-run" style="height:10%;">
                 <div class="col-9 d-flex align-items-center">
-                    <span><h3>Posts</h3></span>
+                    <span><h3>Follower Posts</h3></span>
                 </div>
                 <div class="col-3 d-flex align-items-center justify-content-center">
                 <!-- Adding a new Post-->
@@ -78,23 +94,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12" style="margin-top:5px;">
                     <!-- User content goes here -->
                     {% for post in allPostsOrdered %}
                     <div class="row" style="height:25%;">
                         <div class="col-12">
-                            <div class="row">
-                                <div class="col-12">
                                     <div class="media border" style="border-radius:5px; background-color: #f9f9f9;">
-                                        <img class="mr-1" style="width:50px; height:50px;" src = {{ url_for('static', filename='images/profilePictureTest.webp') }} alt="Profile Picture">
+                                        <img class="mr-1" style="width:50px; height:50px; margin:5px;" src = {{ url_for('static', filename='images/profilePictureTest.webp') }} alt="Profile Picture">
                                         <div class="media-body">
-                                            <b class="mt-0" style="font-size:1.5em;">{{ post['username'] }}</b> - <span class="font-weight-light">{{ post['date'] }}</span>
+                                            <b class="mt-0" style="font-size:1.5em;">{{ post['username'] }}</b> - <span class="font-weight-light">{{ post['Date'] }}</span>
                                             <p><b> {{ post['title'] }} - {{ post['distance'] }}km</b></p>
                                             <p> {{ post['description'] }}</p>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     {% endfor %}

@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, redirect
+from flask import render_template, request, url_for, redirect, flash
 from app import app, db, models
 from flask_security import Security, SQLAlchemyUserDatastore, current_user, auth_required, login_required
 from flask_security.utils import hash_password, verify_password, login_user
@@ -41,7 +41,16 @@ def get_posts(postArr):
         postDictArr.append(postDict)
     return postDictArr
 
-
+@app.context_processor
+def set_nav_context():
+    if current_user.is_authenticated:
+        userLoggedIn = True
+        navUserName = current_user.username
+    else:
+         userLoggedIn = False
+         navUserName = ''
+    template_config = {'thisUserName': navUserName, 'userLoggedIn': userLoggedIn}
+    return template_config
 
 @app.route('/delpost/<post_id>', methods=['POST'])
 def delPost(post_id):
@@ -109,9 +118,12 @@ def index():
     userName = current_user.username
     if form.validate_on_submit():
         theUser = current_user.id
-        runPost = models.runs(user_Id = theUser, runTitle=form.runTitle.data, 
-                    runDistance=form.runDistance.data, run_dateTime=form.runDate.data, runDescription=form.runDesc.data)
-        db.session.add(runPost)
+        if not(form.runDate.data > datetime.today()):
+            runPost = models.runs(user_Id = theUser, runTitle=form.runTitle.data, 
+                        runDistance=form.runDistance.data, run_dateTime=form.runDate.data, runDescription=form.runDesc.data)
+            db.session.add(runPost)
+        else:
+            flash('ERROR SUBMITTING POST: Run date can not be in the future!')
         db.session.commit()
         return redirect(url_for('index'))
     totalRuns = find_total_runs(current_user)
@@ -126,6 +138,7 @@ def login():
     form = loginForm()
     if current_user.is_authenticated:
        return redirect(url_for('index'))
+    userAuth = True
     if request.method == 'POST':
         if form.validate_on_submit():
             userAttempt = models.users.query.filter_by(email=form.email.data).all()
@@ -135,7 +148,13 @@ def login():
                     login_user(userObj)
                     return redirect(url_for('index'))
                 else:
-                    return redirect(url_for('register'))
+                    #If user password is incorrect
+                    userAuth = False
+            else:
+                #If user email not found
+                userAuth = False
+            if not(userAuth):
+                flash('Email address or password is incorrect! Please try again.')
     return render_template('login.html', form=form)
         
 
@@ -145,13 +164,21 @@ def login():
 def register():
     form = registerForm()
     if request.method == 'POST':
-        user_datastore.create_user(
-            username = request.form.get('username'),
-            email = request.form.get('email'),
-            password = hash_password(request.form.get('password'))
-        )
-        db.session.commit()
-        return redirect(url_for('login'))
+        registerAttempt = users.query.filter_by(email=form.email.data).first()
+        if registerAttempt is None:
+            usernameCheck = users.query.filter_by(username=form.username.data).first()
+            if usernameCheck is None:
+                user_datastore.create_user(
+                    username = request.form.get('username'),
+                    email = request.form.get('email'),
+                    password = hash_password(request.form.get('password'))
+                )
+                db.session.commit()
+                return redirect(url_for('login'))
+            else:
+                flash('Username is already taken! Please try another.')
+        else:
+            flash('Email address is is already taken! Have you registered already?')
     return render_template('registration.html', form=form)
 
 # View for other users' profile

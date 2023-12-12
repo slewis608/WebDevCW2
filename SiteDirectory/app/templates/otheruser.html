@@ -21,13 +21,13 @@
     <div class="row" style="height:90%;">
         <div class="col-12" id="thisUserDash">
             {% for post in userPosts %}
-            <div class="row" style="margin:10px;">
-                <div class="media border" style="border-radius:5px; background-color: #f9f9f9;">
-                        <img class="mr-3" style="width:50px; height:50px;" src = {{ url_for('static', filename='images/profilePictureTest.webp') }} alt="Profile Picture">
+            <div class="row w-100" style="margin:10px;">
+                <div class="media border w-100" style="border-radius:5px; background-color: #f9f9f9;">
+                        <img class="mr-3" style="margin: 3px; width:50px; height:50px;" src = {{ url_for('static', filename='images/profilePictureTest.webp') }} alt="Profile Picture">
                     <div class="media-body" style="margin:3px;">
                         <b class="mt-0" style="font-size:1.5em;">{{ post['username'] }} </b> - <span class="font-weight-light"> {{ post['date']}} </span> <br>
                         <b>{{ post['title'] }} - {{ post['distance'] }}km </b> <br>
-                        <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                        <p>{{ post['description'] }}</p>
                     </div>
                 </div>
             </div>
